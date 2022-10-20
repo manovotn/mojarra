@@ -123,6 +123,8 @@ public class CdiExtension implements Extension {
         try {
             ProcessBean<T> event = processBeanEvent; // JDK8 u60 workaround - https://web.archive.org/web/20161007164846/http://mail.openjdk.java.net/pipermail/lambda-dev/2015-August/012146.html/012146.html
 
+            // TODO this is technically wrong because `beanClass` of a producer method is the class containing the producer!
+            // TODO such class doesn't even need to extend DataModel and this could lead to a failure
             getAnnotation(beanManager, event.getAnnotated(), FacesDataModel.class)
                 .ifPresent(model -> forClassToDataModelClass.put(model.forClass(), (Class<T>) event.getBean().getBeanClass()));
         }
@@ -134,6 +136,8 @@ public class CdiExtension implements Extension {
             }
         }
     }
+
+
 
     /**
      * ProcessManagedBean:
